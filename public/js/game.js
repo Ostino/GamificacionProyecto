@@ -184,7 +184,7 @@ export function startGame() {
 export function resetGame() {
   const winScreen = document.getElementById('win-screen');
   const pauseOverlay = document.getElementById('pause-overlay');
-  if (winScreen) winScreen.classList.remove('visible');
+  if (winScreen) { winScreen.classList.remove('visible'); winScreen.style.display = 'none'; }
   if (pauseOverlay) pauseOverlay.classList.remove('visible');
   
   state.gamePaused = false;

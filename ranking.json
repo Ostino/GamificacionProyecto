@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "initials": "JOE",
+    "player": 2,
+    "time": "00:26.5",
+    "pts": 252,
+    "color": "rgb(255, 26, 26)"
+  },
+  {
+    "initials": "DVD",
+    "player": 2,
+    "time": "00:23.9",
+    "pts": 238,
+    "color": "rgb(255, 60, 172)"
+  },
+  {
+    "initials": "DAN",
+    "player": 1,
+    "time": "00:28.8",
+    "pts": 228,
+    "color": "rgb(0, 245, 255)"
+  },
+  {
+    "initials": "LOL",
+    "player": 1,
+    "time": "00:28.7",
+    "pts": 223,
+    "color": "rgb(0, 245, 255)"
+  },
+  {
+    "initials": "OCA",
+    "player": 1,
+    "time": "00:26.5",
+    "pts": 209,
+    "color": "rgb(0, 245, 255)"
+  },
+  {
+    "initials": "ZNE",
+    "player": 1,
+    "time": "00:23.9",
+    "pts": 69,
+    "color": "rgb(255, 26, 26)"
+  }
+]

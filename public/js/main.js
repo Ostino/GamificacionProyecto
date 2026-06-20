@@ -6,9 +6,29 @@ import { usePower } from './powers.js';
 import { updateUI } from './ui.js';
 import { updateRacer } from './ui.js';
 
+// Muestra la pantalla de inicio con el mensaje correcto según el rol actual
+function showReadyScreen() {
+  const startScreen = document.getElementById('start-screen');
+  const subTitle = document.querySelector('.start-sub');
+  if (startScreen) startScreen.style.display = '';
+  if (!subTitle) return;
+  if (state.miRol === 1) {
+    subTitle.innerHTML = `
+      <span style="color:#39ff14; font-size:18px; font-weight:bold;">¡RIVAL CONECTADO!</span><br><br>
+      <button onclick="window.hostSendStart()" style="padding:14px 28px; font-family:'Orbitron',sans-serif; font-size:16px; background:#00f5ff; color:#050510; border:none; cursor:pointer; font-weight:900; box-shadow: 0 0 15px #00f5ff; border-radius:4px; letter-spacing:2px;">INICIAR CARRERA</button>
+    `;
+  } else if (state.miRol === 2) {
+    subTitle.innerHTML = `<span style="color:#39ff14; font-size:18px; font-weight:bold;">¡CONECTADO AL HOST!</span><br><span style="color:#00f5ff;">ESPERANDO QUE EL JUGADOR 1 HAGA CLICK EN EMPEZAR...</span>`;
+  }
+}
+
 // Exponer funciones necesarias al objeto global window
 window.startGame = startGame;
-window.resetGame = resetGame;
+window.resetGame = function() {
+  resetGame();
+  if (window.socket) window.socket.emit('player_action', { tipo: 'RESTART' });
+  showReadyScreen();
+};
 window.saveScore = saveScore;
 window.clearRanking = clearRanking;
 window.usePower = usePower;
@@ -39,15 +59,7 @@ function setupSocketListeners() {
   });
 
   socket.on('both_players_ready', () => {
-    const subTitle = document.querySelector('.start-sub');
-    if (state.miRol === 1 && subTitle) {
-      subTitle.innerHTML = `
-        <span style="color:#39ff14; font-size:18px; font-weight:bold;">¡RIVAL CONECTADO!</span><br><br>
-        <button onclick="window.hostSendStart()" style="padding:14px 28px; font-family:'Orbitron',sans-serif; font-size:16px; background:#00f5ff; color:#050510; border:none; cursor:pointer; font-weight:900; box-shadow: 0 0 15px #00f5ff; border-radius:4px; letter-spacing:2px;">INICIAR CARRERA</button>
-      `;
-    } else if (state.miRol === 2 && subTitle) {
-      subTitle.innerHTML = `<span style="color:#39ff14; font-size:18px; font-weight:bold;">¡CONECTADO AL HOST!</span><br><span style="color:#00f5ff;">ESPERANDO QUE EL JUGADOR 1 HAGA CLICK EN EMPEZAR...</span>`;
-    }
+    showReadyScreen();
   });
 
   socket.on('start_game_signal', () => {
@@ -79,6 +91,7 @@ function setupSocketListeners() {
 
       case 'RESTART':
         resetGame();
+        showReadyScreen();
         break;
 
       case 'UPDATE_RANKING':
