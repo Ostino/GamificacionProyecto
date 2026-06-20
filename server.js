@@ -62,6 +62,15 @@ app.post('/api/ranking', (req, res) => {
     res.status(500).json({ error: "No se pudo guardar la puntuación" });
   }
 });
+app.post('/api/ranking/clear', (req, res) => {
+  try {
+    fs.writeFileSync(RANKING_FILE, JSON.stringify([], null, 2));
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'No se pudo borrar el ranking' });
+  }
+});
+
 // --- CONTROL ROBUSTO DE JUGADORES ---
 let conectados = { p1: null, p2: null };
 
