@@ -30,6 +30,7 @@ function leerRanking() {
 }
 
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'CRitmo.html')); });
+app.get('/Guia.png', (req, res) => { res.sendFile(path.join(__dirname, 'Guia.png')); });;
 app.get('/api/ranking', (req, res) => { res.json(leerRanking()); });
 app.post('/api/ranking', (req, res) => {
   try {
@@ -125,41 +126,39 @@ io.on('connection', (socket) => {
 
 // ZeroTier
 
-function getLocalIP() {
+function getIPs() {
   const interfaces = os.networkInterfaces();
-  let localIP = 'localhost';
+  let lanIP = null;
   let zeroTierIP = null;
 
   for (const name of Object.keys(interfaces)) {
     for (const iface of interfaces[name]) {
-      // Solo nos interesan direcciones IPv4 que no sean internas (localhost)
       if (iface.family === 'IPv4' && !iface.internal) {
-        // Si el nombre de la interfaz contiene 'zerotier' o 'zt', la priorizamos inmediatamente
         if (name.toLowerCase().includes('zerotier') || name.toLowerCase().includes('zt')) {
           zeroTierIP = iface.address;
         } else {
-          localIP = iface.address; // Guardamos la IP LAN normal como respaldo
+          lanIP = iface.address;
         }
       }
     }
   }
 
-  // Si encontramos una IP de ZeroTier, usamos esa; si no, usamos la de la red local normal
-  return zeroTierIP ? zeroTierIP : localIP;
+  return { lanIP, zeroTierIP };
 }
 
-// Escuchar en el puerto 3000 apuntando a '0.0.0.0' 
-// Esto permite que el servidor acepte conexiones de CUALQUIER interfaz de red (LAN, Local y ZeroTier)
-// Escuchar en el puerto 3000 apuntando a '0.0.0.0' usando SERVER.LISTEN (vital para Socket.io)
-const HOST_IP = getLocalIP();
-
 server.listen(PORT, '0.0.0.0', () => {
+  const { lanIP, zeroTierIP } = getIPs();
   console.log('===================================================');
-  console.log(`🚀 SERVIDOR RHYTHM RACE CORRIENDO EN RED VIRTUAL`);
-  console.log(`🏠 IP local/LAN de respaldo: http://localhost:${PORT}`);
-  console.log(`🌐 DIRECCIÓN PARA TU RIVAL (ZeroTier): http://${HOST_IP}:${PORT}`);
+  console.log('  RHYTHM RACE — SERVIDOR ACTIVO');
   console.log('===================================================');
-  console.log('Asegúrate de que ambos estén unidos y autorizados en el panel de ZeroTier.');
+  console.log(`  Local:      http://localhost:${PORT}`);
+  if (lanIP) {
+    console.log(`  Red local:  http://${lanIP}:${PORT}  ← usa esta si están en la misma WiFi/LAN`);
+  }
+  if (zeroTierIP) {
+    console.log(`  ZeroTier:   http://${zeroTierIP}:${PORT}  ← usa esta si están en redes distintas`);
+  }
+  console.log('===================================================');
 });
 //red local normal sin zerotier
 /*
