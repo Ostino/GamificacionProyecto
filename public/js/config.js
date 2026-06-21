@@ -10,17 +10,9 @@ export const PROGRESS_PASSIVE = 0.00018;
 export const POWER_COSTS = [50, 30, 25];
 export const POWER_DURATION = 5000;
 export const NOTE_SPAWN_INTERVAL = 900;
+export const NOTE_LANES = 4;
 
-export const NOTE_SYMBOLS = {
-  a: 'A',
-  s: 'S',
-  d: 'D',
-  w: 'W',
-  ArrowLeft: '←',
-  ArrowDown: '↓',
-  ArrowRight: '→',
-  ArrowUp: '↑'
-};
-
-export const P1_KEYS = ['a', 's', 'd', 'w'];
-export const P2_KEYS = ['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp'];
+export const ALL_KEYS = [
+  'a','b','c','d','e','f','g','h','i','j','k','l','m',
+  'n','o','p','q','r','s','t','u','v','w','x','y','z'
+];

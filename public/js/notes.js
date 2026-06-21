@@ -1,10 +1,11 @@
 import {
+  ALL_KEYS,
   COMBO_MAX,
   HIT_TOLERANCE,
   HIT_ZONE_X,
+  NOTE_LANES,
   NOTE_SPEED,
   NOTE_SPAWN_INTERVAL,
-  NOTE_SYMBOLS,
   PROGRESS_HIT,
   PROGRESS_MISS
 } from './config.js';
@@ -17,16 +18,16 @@ export function spawnNote(pid) {
   const p = state.players[pid];
   const canvas = p.canvas;
   const canvasW = canvas.offsetWidth;
-  const key = p.keys[Math.floor(Math.random() * p.keys.length)];
-  const row = p.keys.indexOf(key);
-  const y = 10 + row * 16;
+  const key = ALL_KEYS[Math.floor(Math.random() * ALL_KEYS.length)];
+  const lane = Math.floor(Math.random() * NOTE_LANES);
+  const y = 10 + lane * 16;
   const el = document.createElement('div');
   el.className = 'arrow-note';
   const col = pid === 1 ? '#00f5ff' : '#ff3cac';
   el.style.cssText = `left:${canvasW}px;top:${y}px;width:26px;height:26px;background:color-mix(in srgb,
   ${col} 20%,#0a0a18);border:1.5px solid ${col};color:${col};box-shadow:0 0 6px color-mix(in srgb,
   ${col} 40%,transparent);font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;`;
-  el.textContent = NOTE_SYMBOLS[key];
+  el.textContent = key.toUpperCase();
   el.dataset.key = key;
   canvas.appendChild(el);
   p.notes.push({ el, key, x: canvasW, hit: false, missed: false });

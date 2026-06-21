@@ -1,4 +1,4 @@
-import { BASE_SPEED, P1_KEYS, P2_KEYS } from './config.js';
+import { BASE_SPEED } from './config.js';
 
 export const state = {
   miRol: null,
@@ -21,11 +21,9 @@ export const state = {
       progress: 0,
       notes: [],
       powerTimers: {},
-      keys: P1_KEYS,
       canvas: null,
       racer: null,
-      color: '#00f5ff',
-      keyEls: { a: null, s: null, d: null, w: null }
+      color: '#00f5ff'
     },
     2: {
       pts: 0,
@@ -37,16 +35,9 @@ export const state = {
       progress: 0,
       notes: [],
       powerTimers: {},
-      keys: P2_KEYS,
       canvas: null,
       racer: null,
-      color: '#ff3cac',
-      keyEls: {
-        ArrowLeft: null,
-        ArrowDown: null,
-        ArrowRight: null,
-        ArrowUp: null
-      }
+      color: '#ff3cac'
     }
   }
 };

@@ -11,18 +11,6 @@ export function initRefs() {
   state.players[2].canvas = document.getElementById('p2-canvas');
   state.players[1].racer = document.getElementById('p1-racer');
   state.players[2].racer = document.getElementById('p2-racer');
-  state.players[1].keyEls = {
-    a: document.getElementById('kt-a'),
-    s: document.getElementById('kt-s'),
-    d: document.getElementById('kt-d'),
-    w: document.getElementById('kt-w')
-  };
-  state.players[2].keyEls = {
-    ArrowLeft: document.getElementById('kt-left'),
-    ArrowDown: document.getElementById('kt-down'),
-    ArrowRight: document.getElementById('kt-right'),
-    ArrowUp: document.getElementById('kt-up')
-  };
 }
 
 function checkWin(pid) {
