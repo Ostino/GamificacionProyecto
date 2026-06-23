@@ -212,6 +212,39 @@ body::before {
 @keyframes turbo { 0%,100%{transform:translateY(-50%) scale(1)} 50%{transform:translateY(-50%) scale(1.15)} }
 .racer.turbo { animation: turbo 0.3s ease-in-out infinite; }
 
+#countdown-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75); z-index: 90;
+  align-items: center; justify-content: center;
+}
+#countdown-overlay.visible { display: flex; }
+#countdown-number {
+  font-size: 200px; font-weight: 900; line-height: 1;
+  background: linear-gradient(135deg, var(--p1), var(--p1b), var(--p2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 0 30px var(--p1));
+  animation: countStep 0.9s ease-in-out forwards;
+}
+#countdown-number.go {
+  font-size: 130px; letter-spacing: 14px;
+  background: linear-gradient(135deg, var(--green), var(--p1));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 0 30px var(--green));
+  animation: goStep 0.65s ease-in-out forwards;
+}
+@keyframes countStep {
+  0%   { transform: scale(1.7); opacity: 0; }
+  20%  { transform: scale(1.0); opacity: 1; }
+  75%  { transform: scale(1.0); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+@keyframes goStep {
+  0%   { transform: scale(0.5); opacity: 0; }
+  35%  { transform: scale(1.08); opacity: 1; }
+  75%  { transform: scale(1.0);  opacity: 1; }
+  100% { transform: scale(1.15); opacity: 0; }
+}
+
 #pause-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(5,5,15,0.88);
@@ -241,7 +274,7 @@ body::before {
 .start-sub { font-size: 11px; letter-spacing: 8px; color: #555588; }
 .controls-single {
   background: var(--panel); border-radius: 12px;
-  padding: 24px 48px; border: 1px solid #1a1a3a; min-width: 360px;
+  padding: 24px 48px; border: 1px solid #1a1a3a; min-width: 520px;
 }
 .ctrl-section-title {
   font-size: 11px; letter-spacing: 6px; color: #555588;
@@ -262,10 +295,35 @@ body::before {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .ctrl-powers { display: flex; gap: 8px; align-items: center; }
+.ctrl-row-header { margin-bottom: 4px; }
+.ctrl-powers-list {
+  display: grid;
+  grid-template-columns: 72px 140px 1fr 52px;
+  align-items: center;
+  row-gap: 10px; column-gap: 14px;
+  margin-bottom: 16px;
+}
+.ctrl-power-item { display: contents; }
+.ctrl-power-name {
+  font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700;
+  color: #9999cc; letter-spacing: 1px;
+}
+.ctrl-power-desc {
+  font-family: 'Share Tech Mono', monospace; font-size: 12px;
+  color: #555588; letter-spacing: 1px;
+}
+.ctrl-power-cost {
+  font-family: 'Share Tech Mono', monospace; font-size: 11px;
+  color: var(--gold); letter-spacing: 1px; opacity: 0.7; text-align: right;
+}
 .ctrl-power-key {
   padding: 6px 14px; border-radius: 6px;
   font-family: 'Share Tech Mono', monospace; font-size: 14px;
   border: 1px solid #2a2a5a; background: #0d0d22; color: #aaaacc;
+  text-align: center;
+}
+.ctrl-powers-list .ctrl-power-key {
+  padding: 6px 0; display: block; width: 100%;
 }
 .ctrl-hint-line {
   font-family: 'Share Tech Mono', monospace;

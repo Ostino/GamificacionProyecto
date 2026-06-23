@@ -1,7 +1,7 @@
 export const FINISH_OFFSET = 30;
 export const NOTE_SPEED = 140;
 export const HIT_ZONE_X = 30;
-export const HIT_TOLERANCE = 22;
+export const HIT_TOLERANCE = 18;
 export const COMBO_MAX = 10;
 export const BASE_SPEED = 2;
 export const PROGRESS_HIT = 0.004;

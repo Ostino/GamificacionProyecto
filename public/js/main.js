@@ -33,9 +33,43 @@ window.usePower = usePower;
 
 window.hostSendStart = function() {
   if (window.socket && state.miRol === 1) {
-    window.socket.emit('host_start_game'); 
+    window.socket.emit('host_start_game');
   }
 };
+
+function startCountdown(onDone) {
+  const startScreen = document.getElementById('start-screen');
+  if (startScreen) startScreen.style.display = 'none';
+
+  const overlay = document.getElementById('countdown-overlay');
+  const numEl = document.getElementById('countdown-number');
+  overlay.classList.add('visible');
+
+  const steps = [
+    { text: '3', go: false, duration: 1000 },
+    { text: '2', go: false, duration: 1000 },
+    { text: '1', go: false, duration: 1000 },
+    { text: 'GO!', go: true,  duration: 700  },
+  ];
+  let i = 0;
+
+  function tick() {
+    if (i >= steps.length) {
+      overlay.classList.remove('visible');
+      onDone();
+      return;
+    }
+    const { text, go, duration } = steps[i];
+    numEl.className = go ? 'go' : '';
+    numEl.textContent = text;
+    numEl.style.animationName = 'none';
+    void numEl.offsetHeight;
+    numEl.style.animationName = '';
+    i++;
+    setTimeout(tick, duration);
+  }
+  tick();
+}
 
 function setupSocketListeners() {
   const socket = window.socket;
@@ -60,7 +94,7 @@ function setupSocketListeners() {
   });
 
   socket.on('start_game_signal', () => {
-    startGame();
+    startCountdown(() => startGame());
   });
 
   socket.on('rival_action', (data) => {
