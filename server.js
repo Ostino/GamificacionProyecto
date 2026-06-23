@@ -36,24 +36,18 @@ app.post('/api/ranking', (req, res) => {
   try {
     const newEntry = req.body; 
     
-    // Asegurar que los puntos se procesen como números enteros
     newEntry.pts = parseInt(newEntry.pts) || 0;
     
     let ranking = leerRanking();
     ranking.push(newEntry);
     
-    // ORDENAMIENTO COMPUESTO: Prioriza Puntos, desempata por Tiempo
     ranking.sort((a, b) => {
-      // 1. Si los puntos son distintos, el que tenga más puntos va primero
       if (b.pts !== a.pts) {
         return b.pts - a.pts;
       }
-      // 2. Si tienen los mismos puntos, el que tenga MENOR tiempo va primero
-      // (Compara las cadenas de texto "00:45.20" < "00:52.10")
       return a.time.localeCompare(b.time);
     });
     
-    // Cortar estrictamente al Top 10
     ranking = ranking.slice(0, 10);
     
     fs.writeFileSync(RANKING_FILE, JSON.stringify(ranking, null, 2));
@@ -72,16 +66,13 @@ app.post('/api/ranking/clear', (req, res) => {
   }
 });
 
-// --- CONTROL ROBUSTO DE JUGADORES ---
 let conectados = { p1: null, p2: null };
 
 io.on('connection', (socket) => {
-  // Verificamos si este socket id ya fue registrado para evitar duplicados extravagantes
   if (conectados.p1 === socket.id || conectados.p2 === socket.id) return;
 
   let rol = null;
 
-  // Asignación estricta de ranuras libres
   if (!conectados.p1) {
     conectados.p1 = socket.id;
     rol = 1;
@@ -94,10 +85,8 @@ io.on('connection', (socket) => {
     console.log(`[SERVER] Espectador conectado: ${socket.id}`);
   }
 
-  // Le respondemos de inmediato su rol
   socket.emit('init_role', { role: rol });
 
-  // Si con esta conexión logramos tener a ambos, avisamos a la sala
   if (conectados.p1 && conectados.p2) {
     io.emit('both_players_ready');
   }
@@ -123,8 +112,6 @@ io.on('connection', (socket) => {
     io.emit('player_disconnected');
   });
 });
-
-// ZeroTier
 
 function getIPs() {
   const interfaces = os.networkInterfaces();

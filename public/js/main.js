@@ -15,10 +15,10 @@ function showReadyScreen() {
   if (state.miRol === 1) {
     subTitle.innerHTML = `
       <span style="color:#39ff14; font-size:18px; font-weight:bold;">¡RIVAL CONECTADO!</span><br><br>
-      <button onclick="window.hostSendStart()" style="padding:14px 28px; font-family:'Orbitron',sans-serif; font-size:16px; background:#00f5ff; color:#050510; border:none; cursor:pointer; font-weight:900; box-shadow: 0 0 15px #00f5ff; border-radius:4px; letter-spacing:2px;">INICIAR CARRERA</button>
+      <button onclick="window.hostSendStart()" style="display:block; margin:0 auto; padding:14px 28px; font-family:'Orbitron',sans-serif; font-size:16px; background:#00f5ff; color:#050510; border:none; cursor:pointer; font-weight:900; box-shadow: 0 0 15px #00f5ff; border-radius:4px; letter-spacing:2px;">INICIAR CARRERA</button>
     `;
   } else if (state.miRol === 2) {
-    subTitle.innerHTML = `<span style="color:#39ff14; font-size:18px; font-weight:bold;">¡CONECTADO AL HOST!</span><br><span style="color:#00f5ff;">ESPERANDO QUE EL JUGADOR 1 HAGA CLICK EN EMPEZAR...</span>`;
+    subTitle.innerHTML = `<span style="display:block; text-align:center; color:#39ff14; font-size:18px; font-weight:bold;">¡CONECTADO AL HOST!</span><br><span style="display:block; text-align:center; color:#00f5ff;">ESPERANDO QUE EL JUGADOR 1 HAGA CLICK EN EMPEZAR...</span>`;
   }
 }
 

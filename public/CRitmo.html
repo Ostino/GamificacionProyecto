@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RHYTHM RACE</title>
+<title>Flujo Mecanografico</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<!-- START -->
 <div id="start-screen">
-  <div class="start-title">RHYTHM<br>RACE</div>
+  <div class="start-title">Flujo<br>Mecanografico</div>
   <div class="start-sub">2 PLAYER LOCAL</div>
   <div class="controls-grid">
     <div class="ctrl-box c1">
-      <h3>PLAYER 1</h3>
+      <h3>Jugador 1</h3>
       <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#00f5ff;letter-spacing:3px;margin:8px 0 4px">NOTAS</div>
       <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#00f5ff;letter-spacing:2px;margin-bottom:8px">A — Z</div>
       <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#333366;margin:6px 0 4px;letter-spacing:2px">PODERES</div>
@@ -26,7 +25,7 @@
       </div>
     </div>
     <div class="ctrl-box c2">
-      <h3>PLAYER 2</h3>
+      <h3>Jugador 2</h3>
       <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#ff3cac;letter-spacing:3px;margin:8px 0 4px">NOTAS</div>
       <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#ff3cac;letter-spacing:2px;margin-bottom:8px">A — Z</div>
       <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#333366;margin:6px 0 4px;letter-spacing:2px">PODERES</div>
@@ -40,17 +39,14 @@
   <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#333355;text-align:center;line-height:2">
     PRESIONA LA LETRA QUE APAREZCA &nbsp;|&nbsp; MANTÉN COMBO → x1.5 VEL &nbsp;|&nbsp; ESC → PAUSA
   </div>
-  <!-- <button class="start-btn" id="start-btn" type="button" onclick="startGame()">INICIAR</button> -->
 </div>
 
-<!-- PAUSE -->
 <div id="pause-overlay">
   <div class="pause-title">PAUSA</div>
   <img src="/Guia.png" alt="Guía" style="max-width:80%;max-height:60vh;margin:16px 0;border-radius:6px;">
   <div class="pause-sub">PRESIONA ESC PARA CONTINUAR</div>
 </div>
 
-<!-- WIN / RANKING -->
 <div id="win-screen">
   <div class="win-section win-header">
     <div class="win-label" id="win-title">GANADOR</div>
@@ -85,7 +81,6 @@
 
 <div id="power-notification"></div>
 
-<!-- GAME -->
 <div id="game-wrapper">
   <div id="header">
     <div class="game-title">RHYTHM RACE</div>
@@ -204,10 +199,7 @@
 <script type="module" src="js/main.js"></script>
 <<script src="/socket.io/socket.io.js"></script>
 <script>
-  // SOLUCIÓN AUTOMÁTICA: Detecta por sí mismo la IP desde la que se abrió el juego
-  // Si entran por localhost, usa localhost. Si entran por la IP de ZeroTier, usa esa IP de ZeroTier.
   const hostSeguro = window.location.protocol + '//' + window.location.hostname + ':3000';
-  
   console.log("[SOCKET] Conectando automáticamente a:", hostSeguro);
   window.socket = io(hostSeguro); 
 </script>
