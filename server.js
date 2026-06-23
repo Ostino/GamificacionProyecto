@@ -140,10 +140,10 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log('===================================================');
   console.log(`  Local:      http://localhost:${PORT}`);
   if (lanIP) {
-    console.log(`  Red local:  http://${lanIP}:${PORT}  ← usa esta si están en la misma WiFi/LAN`);
+    console.log(`  Red local:  http://${lanIP}:${PORT}  `);
   }
   if (zeroTierIP) {
-    console.log(`  ZeroTier:   http://${zeroTierIP}:${PORT}  ← usa esta si están en redes distintas`);
+    console.log(`  ZeroTier:   http://${zeroTierIP}:${PORT} `);
   }
   console.log('===================================================');
 });

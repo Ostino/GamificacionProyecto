@@ -14,14 +14,11 @@ export function initRefs() {
 }
 
 function checkWin(pid) {
-  // Solo la computadora que controla a su propio jugador puede dictaminar su victoria
   if (state.players[pid].progress >= 1.0 && state.miRol === pid) {
     const finalTimeStr = formatTime(getElapsedMs());
     
-    // 1. Ejecuta su fin de juego local
     endGame(pid, { time: finalTimeStr, pts: state.players[pid].pts });
     
-    // 2. Le avisa inmediatamente al rival y le manda el tiempo congelado
     if (window.socket) {
       window.socket.emit('player_action', {
         tipo: 'FORCE_END_GAME',
@@ -33,7 +30,6 @@ function checkWin(pid) {
   }
 }
 
-// Función expuesta globalmente para que main.js pueda forzar el fin desde la red
 export function endGame(winPid) {
   state.gameRunning = false;
   clearInterval(state.gameInterval);
@@ -41,13 +37,11 @@ export function endGame(winPid) {
   const winScreen = document.getElementById('win-screen');
   const winTitle = document.getElementById('win-title');
   
-  // 1. DECLARACIÓN ÚNICA: Buscamos ambos nombres posibles desde el inicio
   const winStats = document.getElementById('win-stats') || document.getElementById('win-time');
   const saveBox = document.getElementById('save-box') || document.getElementById('initials-form');
 
   if (!winScreen) return;
 
-  // Determinar si mi pantalla local es la que ganó o perdió
   const soyGanador = (state.miRol === winPid);
   window.miRolSignificado = state.miRol; 
 
@@ -61,25 +55,21 @@ export function endGame(winPid) {
     }
   }
 
-  // Extraer las estadísticas reales acumuladas con el rastreador de variables
 const misDatos = state.players[state.miRol];
   let puntosFinales = 0;
   
   if (misDatos) {
     console.log("[DEBUG FIN DE JUEGO] Datos de mi jugador:", misDatos);
-    // Forzamos a que lea directamente .pts que es la que tiene el valor 157
     puntosFinales = misDatos.pts ?? 0; 
   }
 
   const tiempoFinal = document.getElementById('timer')?.textContent || 
                       document.getElementById('timer-display')?.textContent || "00:00.00";
 
-  // Guardamos con total seguridad en las variables globales que lee ranking.js
   window.scoreDeRespaldo = parseInt(puntosFinales) || 0;
   window.tiempoDeRespaldo = tiempoFinal;
   window.miRolSignificado = state.miRol;
 
-  // Inyectar en el cuadro de texto del HTML
   if (winStats) {
     winStats.innerHTML = `TU TIEMPO: ${tiempoFinal} | TUS PUNTOS: ${window.scoreDeRespaldo} pts`;
   }
@@ -106,7 +96,6 @@ function gameFrame(timestamp) {
 
   updateTimer();
 
-  // Cada cliente procesa y transmite su propio avance
   if (state.gameRunning && (state.miRol === 1 || state.miRol === 2)) {
     const p = state.players[state.miRol];
     const spd = getEffectiveSpeed(state.miRol);
@@ -122,7 +111,6 @@ function gameFrame(timestamp) {
     }
   }
 
-  // Actualizaciones de pistas locales
   for (let pid = 1; pid <= 2; pid++) {
     updateNotes(pid, dt);
     updateRacer(pid);

@@ -20,13 +20,11 @@ function handleKey(e) {
 
   const pid = state.miRol;
 
-  // Notas: cualquier letra A-Z — solo cuenta para el jugador de esta computadora
   if (ALL_KEYS.includes(key.toLowerCase())) {
     procesarNotaLocal(pid, key.toLowerCase());
     return;
   }
 
-  // Poderes: Espacio = poder 1, 4 = poder 2, 7 = poder 3
   if (key === ' ') { e.preventDefault(); usePowerLocal(pid, 1); return; }
   if (key === '4') { usePowerLocal(pid, 2); return; }
   if (key === '7') { usePowerLocal(pid, 3); return; }

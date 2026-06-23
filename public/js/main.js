@@ -6,7 +6,6 @@ import { usePower } from './powers.js';
 import { updateUI } from './ui.js';
 import { updateRacer } from './ui.js';
 
-// Muestra la pantalla de inicio con el mensaje correcto según el rol actual
 function showReadyScreen() {
   const startScreen = document.getElementById('start-screen');
   const subTitle = document.querySelector('.start-sub');
@@ -22,7 +21,6 @@ function showReadyScreen() {
   }
 }
 
-// Exponer funciones necesarias al objeto global window
 window.startGame = startGame;
 window.resetGame = function() {
   resetGame();
@@ -33,7 +31,6 @@ window.saveScore = saveScore;
 window.clearRanking = clearRanking;
 window.usePower = usePower;
 
-// Envía la señal de inicio de carrera al servidor
 window.hostSendStart = function() {
   if (window.socket && state.miRol === 1) {
     window.socket.emit('host_start_game'); 

@@ -1,6 +1,5 @@
 import { state } from './state.js';
 
-// Consulta el ranking a la API del servidor LAN (Se exporta correctamente)
 export async function getRanking() {
   try {
     const response = await fetch('/api/ranking');
@@ -12,7 +11,6 @@ export async function getRanking() {
   }
 }
 
-// Renderiza el ranking en el DOM limitado estrictamente a un Top 10
 export async function renderRanking(highlightIdx) {
   const ranking = await getRanking();
   const tbody = document.getElementById('ranking-body');
@@ -20,7 +18,6 @@ export async function renderRanking(highlightIdx) {
   
   tbody.innerHTML = '';
 
-  // Cortamos estrictamente a los mejores 10 puestos
 ranking.slice(0, 10).forEach((entry, i) => {
     const tr = document.createElement('tr');
     if (i === highlightIdx) tr.classList.add('new-entry');
@@ -41,20 +38,15 @@ ranking.slice(0, 10).forEach((entry, i) => {
   }
 }
 
-// Guarda la puntuación personal calculada en cada pantalla independiente
 export async function saveScore() {
-// 1. Capturar las iniciales
   const i1 = document.getElementById('init1')?.value.toUpperCase() || '_';
   const i2 = document.getElementById('init2')?.value.toUpperCase() || '_';
   const i3 = document.getElementById('init3')?.value.toUpperCase() || '_';
   const initials = i1 + i2 + i3;
   
-  // 2. EXTRAER PUNTOS Y TIEMPO (Priorizando las variables del juego sobre el texto del DOM)
- // Dentro de saveScore()...
   let finalPts = 0;
   let finalTime = "00:00.00";
 
-  // Leemos directamente los respaldos numéricos de la ventana
   if (typeof window.scoreDeRespaldo !== 'undefined' && window.scoreDeRespaldo !== null) {
     finalPts = parseInt(window.scoreDeRespaldo);
     finalTime = window.tiempoDeRespaldo || "00:00.00";
@@ -84,19 +76,15 @@ export async function saveScore() {
     if (!response.ok) throw new Error('Error al guardar score');
     const resultado = await response.json();
 
-    // Buscar en qué posición del top 10 quedó para resaltarlo
     const highlightIdx = resultado.ranking.findIndex(
       r => r.initials === entry.initials && r.pts === entry.pts && r.time === entry.time
     );
 
-    // Ocultar la caja de guardar
     const saveBox = document.getElementById('save-box');
     if (saveBox) saveBox.style.setProperty('display', 'none', 'important');
     
-    // Renderizar localmente el nuevo Top 10
     await renderRanking(highlightIdx);
 
-    // ¡CRÍTICO! Avisar al rival por WebSockets para que su pantalla actualice el ranking automáticamente
     if (window.socket) {
       window.socket.emit('player_action', { tipo: 'UPDATE_RANKING' });
     }
@@ -107,7 +95,6 @@ export async function saveScore() {
   }
 }
 
-// Borra por completo el archivo json mediante la API
 export async function clearRanking() {
   try {
     const response = await fetch('/api/ranking/clear', { method: 'POST' });
