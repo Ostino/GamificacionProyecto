@@ -1,9 +1,30 @@
 [
   {
-    "initials": "OMR",
+    "initials": "777",
     "player": 1,
-    "time": "00:33.4",
-    "pts": 162,
-    "color": "rgb(0, 245, 255)"
+    "time": "00:37.9",
+    "pts": 156,
+    "color": "rgb(255, 26, 26)"
+  },
+  {
+    "initials": "P3K",
+    "player": 2,
+    "time": "00:47.8",
+    "pts": 111,
+    "color": "rgb(255, 60, 172)"
+  },
+  {
+    "initials": "OMD",
+    "player": 2,
+    "time": "00:37.4",
+    "pts": 95,
+    "color": "rgb(255, 60, 172)"
+  },
+  {
+    "initials": "PEP",
+    "player": 1,
+    "time": "00:47.8",
+    "pts": 15,
+    "color": "rgb(255, 26, 26)"
   }
 ]

@@ -1,4 +1,4 @@
-import { COMBO_MAX, FINISH_OFFSET } from './config.js';
+import { COMBO_MAX, FINISH_OFFSET, META } from './config.js';
 import { state } from './state.js';
 import { getEffectiveSpeed } from './speed.js';
 
@@ -36,6 +36,6 @@ export function updateRacer(pid) {
   const p = state.players[pid];
   const trackEl = p.racer.parentElement;
   const trackW = trackEl.offsetWidth - FINISH_OFFSET - 20;
-  p.racer.style.left = 20 + Math.min(1, p.progress) * trackW + 'px';
+  p.racer.style.left = 20 + Math.min(1, p.progress / META) * trackW + 'px';
   p.racer.classList.toggle('turbo', p.comboActive);
 }

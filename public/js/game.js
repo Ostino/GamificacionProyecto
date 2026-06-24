@@ -1,4 +1,4 @@
-import { BASE_SPEED, PROGRESS_PASSIVE } from './config.js';
+import { BASE_SPEED, PROGRESS_PASSIVE ,META} from './config.js';
 import { state } from './state.js';
 import { spawnTimers, updateNotes } from './notes.js';
 import { renderRanking, getRanking } from './ranking.js';
@@ -14,7 +14,7 @@ export function initRefs() {
 }
 
 function checkWin(pid) {
-  if (state.players[pid].progress >= 1.0 && state.miRol === pid) {
+  if (state.players[pid].progress >= META && state.miRol === pid) {
     const finalTimeStr = formatTime(getElapsedMs());
     
     endGame(pid, { time: finalTimeStr, pts: state.players[pid].pts });

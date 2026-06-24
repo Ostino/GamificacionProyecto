@@ -1,3 +1,4 @@
+export const META = 1.0;
 export const FINISH_OFFSET = 30;
 export const NOTE_SPEED = 140;
 export const HIT_ZONE_X = 30;

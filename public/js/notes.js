@@ -20,13 +20,13 @@ export function spawnNote(pid) {
   const canvasW = canvas.offsetWidth;
   const key = ALL_KEYS[Math.floor(Math.random() * ALL_KEYS.length)];
   const lane = Math.floor(Math.random() * NOTE_LANES);
-  const y = 10 + lane * 16;
+  const NOTE_SIZE = 44;
+  const CANVAS_H = 180;
+  const y = 8 + lane * Math.floor((CANVAS_H - NOTE_SIZE - 8) / (NOTE_LANES - 1));
   const el = document.createElement('div');
   el.className = 'arrow-note';
-  const col = pid === 1 ? '#00f5ff' : '#ff3cac';
-  el.style.cssText = `left:${canvasW}px;top:${y}px;width:26px;height:26px;background:color-mix(in srgb,
-  ${col} 20%,#0a0a18);border:1.5px solid ${col};color:${col};box-shadow:0 0 6px color-mix(in srgb,
-  ${col} 40%,transparent);font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;`;
+  const col = pid === 1 ? '#2bdefe' : '#ff45eb';
+  el.style.cssText = `left:${canvasW}px;top:${y}px;width:${NOTE_SIZE}px;height:${NOTE_SIZE}px;background:color-mix(in srgb,${col} 18%,#04040a);border:1.5px solid ${col};color:${col};box-shadow:0 0 8px color-mix(in srgb,${col} 35%,transparent);`;
   el.textContent = key.toUpperCase();
   el.dataset.key = key;
   canvas.appendChild(el);
