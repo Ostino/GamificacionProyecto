@@ -1,10 +1,10 @@
 import { state, updateActiveRows } from './state.js';
-import { startGame, resetGame, endGame, togglePause } from './game.js';
+import { startGame, resetGame, endGame, togglePause, applyPauseState } from './game.js';
 import { setupInput } from './input.js';
 import { saveScore, clearRanking, renderRanking } from './ranking.js';
 import { usePower } from './powers.js';
 import { updateUI, updateRacer } from './ui.js';
-import { loadAudio } from './audio.js';
+import { loadAudio, setVolume } from './audio.js';
 
 function applyRowUpdate(rows) {
   updateActiveRows(rows);
@@ -54,6 +54,7 @@ function showReadyScreen() {
 }
 
 window.startGame = startGame;
+window.togglePause = togglePause;
 window.resetGame = function() {
   resetGame();
   if (window.socket) window.socket.emit('player_action', { tipo: 'RESTART' });
@@ -168,7 +169,8 @@ function setupSocketListeners() {
         break;
 
       case 'PAUSE':
-        togglePause(true); 
+        // Sincroniza estado exacto en vez de toggle ciego (evita desincronización)
+        applyPauseState(data.paused);
         break;
 
       case 'RESTART':
@@ -192,7 +194,7 @@ function setupSocketListeners() {
       return;
     }
     if (state.gameRunning && !state.gamePaused) {
-      togglePause(true);
+      applyPauseState(true);
     }
     alert("El rival se ha desconectado de la partida.");
   });
@@ -208,6 +210,18 @@ function init() {
     setupInput();
     updateUI(1);
     updateUI(2);
+
+    const slider = document.getElementById('volume-slider');
+    const volPct = document.getElementById('volume-pct');
+    if (slider) {
+      slider.addEventListener('input', () => {
+        const v = parseFloat(slider.value);
+        setVolume(v);
+        if (volPct) volPct.textContent = Math.round(v * 100) + '%';
+      });
+      // Devuelve el foco al documento al soltar el slider para que ESC funcione
+      slider.addEventListener('pointerup', () => slider.blur());
+    }
   } catch (err) {
     console.error('Error al inicializar:', err);
   }

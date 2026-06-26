@@ -33,6 +33,25 @@ body::before {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 #header-right { display: flex; align-items: center; gap: 16px; }
+#volume-control { display: flex; align-items: center; gap: 10px; }
+#volume-label { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #8888bb; letter-spacing: 3px; }
+#volume-pct { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #2bdefe; width: 38px; }
+#volume-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 160px; height: 4px; border-radius: 2px;
+  background: #2a2a4a; outline: none; cursor: pointer;
+}
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #2bdefe; cursor: pointer;
+  box-shadow: 0 0 10px #2bdefe99;
+}
+#volume-slider::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%; border: none;
+  background: #2bdefe; cursor: pointer;
+  box-shadow: 0 0 10px #2bdefe99;
+}
 #pause-hint {
   font-family: 'Share Tech Mono', monospace; font-size: 10px;
   color: #333366; letter-spacing: 2px;
@@ -255,6 +274,13 @@ body::before {
   color: #fff; opacity: 0.15;
 }
 .pause-sub { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: #555588; letter-spacing: 4px; }
+#btn-resume {
+  padding: 10px 32px; font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 900;
+  background: transparent; color: #2bdefe; border: 1.5px solid #2bdefe;
+  letter-spacing: 3px; cursor: pointer; border-radius: 4px;
+  box-shadow: 0 0 12px #2bdefe44; transition: background 0.15s;
+}
+#btn-resume:hover { background: #2bdefe22; }
 
 #start-screen {
   position: fixed; inset: 0; background: var(--bg);

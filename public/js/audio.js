@@ -3,9 +3,11 @@ import { BEAT_INTERVAL, BEAT_OFFSET } from './config.js';
 let audioCtx = null;
 let audioBuffer = null;
 let sourceNode = null;
+let gainNode = null;
 let startContextTime = 0;
 let loaded = false;
 let started = false;
+let pendingVolume = 1.0;
 
 export async function loadAudio() {
   try {
@@ -13,12 +15,20 @@ export async function loadAudio() {
     if (!res.ok) { console.warn('[AUDIO] No se encontró /Pista.mp3'); return; }
     const arrayBuf = await res.arrayBuffer();
     audioCtx = new AudioContext();
+    gainNode = audioCtx.createGain();
+    gainNode.gain.value = pendingVolume;
+    gainNode.connect(audioCtx.destination);
     audioBuffer = await audioCtx.decodeAudioData(arrayBuf);
     loaded = true;
     console.log('[AUDIO] Pista cargada y decodificada.');
   } catch (e) {
     console.warn('[AUDIO] Error cargando pista:', e);
   }
+}
+
+export function setVolume(v) {
+  pendingVolume = Math.max(0, Math.min(1, v));
+  if (gainNode) gainNode.gain.value = pendingVolume;
 }
 
 export function startAudio() {
@@ -30,7 +40,7 @@ export function startAudio() {
     if (audioCtx.state === 'suspended') audioCtx.resume();
     sourceNode = audioCtx.createBufferSource();
     sourceNode.buffer = audioBuffer;
-    sourceNode.connect(audioCtx.destination);
+    sourceNode.connect(gainNode);
     sourceNode.start(0);
     startContextTime = audioCtx.currentTime;
     started = true;
@@ -40,11 +50,11 @@ export function startAudio() {
 }
 
 export function pauseAudio() {
-  if (audioCtx && audioCtx.state === 'running') audioCtx.suspend();
+  if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(() => {});
 }
 
 export function resumeAudio() {
-  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
 }
 
 export function stopAudio() {

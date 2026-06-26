@@ -107,9 +107,9 @@ function gameFrame(timestamp) {
       spawnNote(2);
     }
   } else {
-    // Fallback: spawn cada ~510ms (mismo ritmo que el BPM)
-    const elapsed = performance.now() - state.gameStartTime;
-    const fallbackBeat = Math.floor(elapsed / 510);
+    // Fallback: resta el tiempo pausado para que no quede por delante del audio
+    const elapsed = performance.now() - state.gameStartTime - state.totalPausedMs;
+    const fallbackBeat = Math.floor(Math.max(0, elapsed) / 510);
     if (fallbackBeat > state.lastBeatIndex) {
       state.lastBeatIndex = fallbackBeat;
       spawnNote(1);
@@ -144,12 +144,13 @@ function gameFrame(timestamp) {
   }
 }
 
-export function togglePause(isRemote = false) {
+// Aplica un estado de pausa concreto (true/false). No emite nada.
+export function applyPauseState(shouldPause) {
   if (!state.gameRunning) return;
-  state.gamePaused = !state.gamePaused;
+  if (state.gamePaused === shouldPause) return; // ya está en el estado correcto
+  state.gamePaused = shouldPause;
   const overlay = document.getElementById('pause-overlay');
-
-  if (state.gamePaused) {
+  if (shouldPause) {
     state.pauseStartTime = performance.now();
     try { pauseAudio(); } catch (_) {}
     if (overlay) overlay.classList.add('visible');
@@ -159,9 +160,15 @@ export function togglePause(isRemote = false) {
     try { resumeAudio(); } catch (_) {}
     if (overlay) overlay.classList.remove('visible');
   }
+}
 
-  if (!isRemote && window.socket) {
-    window.socket.emit('player_action', { tipo: 'PAUSE' });
+// Toggle local: calcula el nuevo estado, lo aplica y lo envía al rival.
+export function togglePause() {
+  if (!state.gameRunning) return;
+  const newPaused = !state.gamePaused;
+  applyPauseState(newPaused);
+  if (window.socket) {
+    window.socket.emit('player_action', { tipo: 'PAUSE', paused: newPaused });
   }
 }
 

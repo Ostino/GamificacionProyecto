@@ -6,12 +6,17 @@ import { state } from './state.js';
 
 const socket = window.socket;
 
+let escLastTime = 0;
+
 function handleKey(e) {
   const key = e.key;
 
   if (key === 'Escape') {
     e.preventDefault();
-    togglePause(false);
+    const now = performance.now();
+    if (now - escLastTime < 300) return; // evita spam de pausa
+    escLastTime = now;
+    togglePause();
     return;
   }
 
