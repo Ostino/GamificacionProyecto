@@ -73,6 +73,9 @@
   <div class="ctrl-hint-line">
     MANTÉN COMBO x10 → velocidad x1.5
   </div>
+  <div id="conn-status" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#8888aa;letter-spacing:2px;margin-top:8px;text-align:center;">
+    CONECTANDO AL SERVIDOR...
+  </div>
 </div>
 
 <div id="countdown-overlay">
@@ -234,14 +237,13 @@
   </div>
 </div>
 
-<script type="module" src="js/main.js"></script>
-<<script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
   const hostSeguro = window.location.protocol + '//' + window.location.hostname + ':3000';
-  console.log("[SOCKET] Conectando automáticamente a:", hostSeguro);
-  window.socket = io(hostSeguro); 
+  console.log("[SOCKET] Socket creado (sin conectar aún):", hostSeguro);
+  // autoConnect:false para que la conexión ocurra DESPUÉS de registrar los listeners en main.js
+  window.socket = io(hostSeguro, { autoConnect: false });
 </script>
-
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

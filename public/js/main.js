@@ -3,8 +3,8 @@ import { startGame, resetGame, endGame, togglePause } from './game.js';
 import { setupInput } from './input.js';
 import { saveScore, clearRanking, renderRanking } from './ranking.js';
 import { usePower } from './powers.js';
-import { updateUI } from './ui.js';
-import { updateRacer } from './ui.js';
+import { updateUI, updateRacer } from './ui.js';
+import { loadAudio } from './audio.js';
 
 function applyRowUpdate(rows) {
   updateActiveRows(rows);
@@ -103,12 +103,25 @@ function startCountdown(onDone) {
   tick();
 }
 
+function setConnStatus(msg, color) {
+  const el = document.getElementById('conn-status');
+  if (el) { el.textContent = msg; el.style.color = color || '#333355'; }
+}
+
 function setupSocketListeners() {
   const socket = window.socket;
-  if (!socket) return;
+  if (!socket) {
+    setConnStatus('ERROR: socket.io no cargó. ¿El servidor está activo?', '#ff1a1a');
+    return;
+  }
+
+  socket.on('connect', () => setConnStatus('CONECTADO — ESPERANDO ROL...', '#39ff14'));
+  socket.on('connect_error', () => setConnStatus('ERROR DE CONEXIÓN — VERIFICA QUE EL SERVIDOR ESTÉ ACTIVO', '#ff1a1a'));
+  socket.on('disconnect', () => setConnStatus('DESCONECTADO DEL SERVIDOR', '#ff6600'));
 
   socket.on('init_role', (data) => {
     state.miRol = data.role;
+    setConnStatus('');
     const subTitle = document.querySelector('.start-sub');
     if (subTitle) {
       if (state.miRol === 1) {
@@ -183,10 +196,14 @@ function setupSocketListeners() {
     }
     alert("El rival se ha desconectado de la partida.");
   });
+
+  // Conectar AHORA que todos los listeners están registrados (evita condición de carrera con init_role)
+  socket.connect();
 }
 
 function init() {
   try {
+    loadAudio();
     setupSocketListeners();
     setupInput();
     updateUI(1);

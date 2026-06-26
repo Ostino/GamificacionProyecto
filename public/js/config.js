@@ -10,8 +10,11 @@ export const PROGRESS_MISS = 0.003;
 export const PROGRESS_PASSIVE = 0.00018;
 export const POWER_COSTS = [50, 30, 25];
 export const POWER_DURATION = 5000;
-export const NOTE_SPAWN_INTERVAL = 900;
 export const NOTE_LANES = 4;
+
+// Dracula - Tame Impala Instrumental: 117.45 BPM, beat cada 0.5108s
+export const BEAT_INTERVAL = 0.5108;
+export const BEAT_OFFSET   = 0;
 
 export const ALL_KEYS = [
   'a','b','c','d','e','f','g','h','i','j','k','l','m',

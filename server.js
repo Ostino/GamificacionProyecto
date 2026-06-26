@@ -30,7 +30,8 @@ function leerRanking() {
 }
 
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'CRitmo.html')); });
-app.get('/Guia.png', (req, res) => { res.sendFile(path.join(__dirname, 'Guia.png')); });;
+app.get('/Guia.png', (req, res) => { res.sendFile(path.join(__dirname, 'Guia.png')); });
+app.get('/Pista.mp3', (req, res) => { res.sendFile(path.join(__dirname, 'Pista.mp3')); });
 app.get('/api/ranking', (req, res) => { res.json(leerRanking()); });
 app.post('/api/ranking', (req, res) => {
   try {

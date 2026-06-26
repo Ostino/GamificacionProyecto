@@ -10,6 +10,7 @@ function handleKey(e) {
   const key = e.key;
 
   if (key === 'Escape') {
+    e.preventDefault();
     togglePause(false);
     return;
   }

@@ -17,6 +17,7 @@ export const state = {
   pauseStartTime: 0,
   totalPausedMs: 0,
   winnerData: null,
+  lastBeatIndex: -1,
   players: {
     1: {
       pts: 0,

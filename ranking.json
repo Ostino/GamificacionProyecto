@@ -40,5 +40,12 @@
     "time": "00:47.8",
     "pts": 15,
     "color": "rgb(255, 26, 26)"
+  },
+  {
+    "initials": "IMP",
+    "player": 1,
+    "time": "01:14.4",
+    "pts": 0,
+    "color": "rgb(255, 26, 26)"
   }
 ]

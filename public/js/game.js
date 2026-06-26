@@ -1,10 +1,11 @@
-import { BASE_SPEED, PROGRESS_PASSIVE ,META} from './config.js';
+import { BASE_SPEED, PROGRESS_PASSIVE, META } from './config.js';
 import { state } from './state.js';
-import { spawnTimers, updateNotes } from './notes.js';
+import { spawnNote, updateNotes } from './notes.js';
 import { renderRanking, getRanking } from './ranking.js';
 import { getEffectiveSpeed } from './speed.js';
 import { formatTime, getElapsedMs, updateTimer } from './timer.js';
 import { updateRacer, updateUI } from './ui.js';
+import { startAudio, pauseAudio, resumeAudio, stopAudio, getAudioBeat } from './audio.js';
 
 export function initRefs() {
   state.players[1].canvas = document.getElementById('p1-canvas');
@@ -74,6 +75,7 @@ const misDatos = state.players[state.miRol];
     winStats.innerHTML = `TU TIEMPO: ${tiempoFinal} | TUS PUNTOS: ${window.scoreDeRespaldo} pts`;
   }
 
+  stopAudio();
   winScreen.classList.add('visible');
   winScreen.style.display = 'flex';
 
@@ -96,6 +98,25 @@ function gameFrame(timestamp) {
 
   updateTimer();
 
+  // Spawn en cada beat de la canción; si el audio no cargó, fallback por timer
+  const beat = getAudioBeat();
+  if (beat >= 0) {
+    if (beat > state.lastBeatIndex) {
+      state.lastBeatIndex = beat;
+      spawnNote(1);
+      spawnNote(2);
+    }
+  } else {
+    // Fallback: spawn cada ~510ms (mismo ritmo que el BPM)
+    const elapsed = performance.now() - state.gameStartTime;
+    const fallbackBeat = Math.floor(elapsed / 510);
+    if (fallbackBeat > state.lastBeatIndex) {
+      state.lastBeatIndex = fallbackBeat;
+      spawnNote(1);
+      spawnNote(2);
+    }
+  }
+
   if (state.gameRunning && (state.miRol === 1 || state.miRol === 2)) {
     const p = state.players[state.miRol];
     const spd = getEffectiveSpeed(state.miRol);
@@ -112,7 +133,7 @@ function gameFrame(timestamp) {
   }
 
   for (let pid = 1; pid <= 2; pid++) {
-    updateNotes(pid, dt);
+    updateNotes(pid, dt, pid === state.miRol);
     updateRacer(pid);
     updateUI(pid);
     checkWin(pid);
@@ -130,10 +151,12 @@ export function togglePause(isRemote = false) {
 
   if (state.gamePaused) {
     state.pauseStartTime = performance.now();
+    try { pauseAudio(); } catch (_) {}
     if (overlay) overlay.classList.add('visible');
   } else {
     state.totalPausedMs += performance.now() - state.pauseStartTime;
     state.lastTime = performance.now();
+    try { resumeAudio(); } catch (_) {}
     if (overlay) overlay.classList.remove('visible');
   }
 
@@ -150,10 +173,11 @@ export function startGame() {
   state.gameRunning = true;
   state.gamePaused = false;
   state.totalPausedMs = 0;
+  state.lastBeatIndex = -1;
   initRefs();
   state.lastTime = performance.now();
   state.gameStartTime = performance.now();
-  setTimeout(spawnTimers, 400);
+  startAudio();
   state.gameLoop = requestAnimationFrame(gameFrame);
 }
 
@@ -164,6 +188,8 @@ export function resetGame() {
   if (pauseOverlay) pauseOverlay.classList.remove('visible');
   
   state.gamePaused = false;
+  stopAudio();
+  state.lastBeatIndex = -1;
 
   for (let pid = 1; pid <= 2; pid++) {
     const p = state.players[pid];

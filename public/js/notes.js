@@ -4,7 +4,6 @@ import {
   HIT_ZONE_X,
   NOTE_LANES,
   NOTE_SPEED,
-  NOTE_SPAWN_INTERVAL,
   PROGRESS_HIT,
   PROGRESS_MISS
 } from './config.js';
@@ -33,15 +32,6 @@ export function spawnNote(pid) {
   p.notes.push({ el, key, x: canvasW, hit: false, missed: false });
 }
 
-export function spawnTimers() {
-  if (!state.gameRunning) return;
-  if (!state.gamePaused) {
-    spawnNote(1);
-    spawnNote(2);
-  }
-  setTimeout(spawnTimers, NOTE_SPAWN_INTERVAL + Math.random() * 300 - 150);
-}
-
 export function onHit(pid) {
   const p = state.players[pid];
   p.combo++;
@@ -64,7 +54,7 @@ export function onMiss(pid) {
   if (hadCombo) showPowerNotif('P' + pid + ' perdió el combo!');
 }
 
-export function updateNotes(pid, dt) {
+export function updateNotes(pid, dt, isLocal = true) {
   const p = state.players[pid];
   const speed = getEffectiveSpeed(pid);
   const noteSpd = NOTE_SPEED * speed;
@@ -80,7 +70,8 @@ export function updateNotes(pid, dt) {
     if (n.x < HIT_ZONE_X - HIT_TOLERANCE - 14) {
       n.missed = true;
       n.el.style.opacity = '0';
-      onMiss(pid);
+      // Solo penalizar misses para el jugador local; el rival maneja los suyos en su PC
+      if (isLocal) onMiss(pid);
       toRemove.push(n);
     }
   }
