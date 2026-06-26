@@ -1,5 +1,4 @@
 import {
-  ALL_KEYS,
   COMBO_MAX,
   HIT_TOLERANCE,
   HIT_ZONE_X,
@@ -18,7 +17,8 @@ export function spawnNote(pid) {
   const p = state.players[pid];
   const canvas = p.canvas;
   const canvasW = canvas.offsetWidth;
-  const key = ALL_KEYS[Math.floor(Math.random() * ALL_KEYS.length)];
+  const pool = state.activeKeys.length ? state.activeKeys : ['a','s','d','f'];
+  const key = pool[Math.floor(Math.random() * pool.length)];
   const lane = Math.floor(Math.random() * NOTE_LANES);
   const NOTE_SIZE = 44;
   const CANVAS_H = 180;

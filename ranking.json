@@ -7,6 +7,20 @@
     "color": "rgb(255, 26, 26)"
   },
   {
+    "initials": "LN2",
+    "player": 2,
+    "time": "00:40.5",
+    "pts": 142,
+    "color": "rgb(255, 26, 26)"
+  },
+  {
+    "initials": "EPS",
+    "player": 1,
+    "time": "00:40.6",
+    "pts": 117,
+    "color": "rgb(0, 245, 255)"
+  },
+  {
     "initials": "P3K",
     "player": 2,
     "time": "00:47.8",

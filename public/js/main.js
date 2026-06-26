@@ -1,10 +1,42 @@
-import { state } from './state.js';
+import { state, updateActiveRows } from './state.js';
 import { startGame, resetGame, endGame, togglePause } from './game.js';
 import { setupInput } from './input.js';
 import { saveScore, clearRanking, renderRanking } from './ranking.js';
 import { usePower } from './powers.js';
 import { updateUI } from './ui.js';
 import { updateRacer } from './ui.js';
+
+function applyRowUpdate(rows) {
+  updateActiveRows(rows);
+  document.querySelectorAll('.key-map-row[data-row]').forEach(rowEl => {
+    const r = parseInt(rowEl.dataset.row);
+    const active = rows.includes(r);
+    rowEl.classList.toggle('row-active', active);
+    rowEl.classList.toggle('row-inactive', !active);
+  });
+}
+
+function setupRowSelector() {
+  const hint = document.getElementById('row-selector-hint');
+  if (hint) hint.classList.add('visible');
+
+  document.querySelectorAll('.key-map-row[data-row]').forEach(rowEl => {
+    rowEl.classList.add('row-selectable');
+    rowEl.addEventListener('click', () => {
+      if (state.gameRunning) return;
+      const r = parseInt(rowEl.dataset.row);
+      let newRows = [...state.activeRows];
+      if (newRows.includes(r)) {
+        if (newRows.length === 1) return;
+        newRows = newRows.filter(x => x !== r);
+      } else {
+        newRows.push(r);
+        newRows.sort();
+      }
+      if (window.socket) window.socket.emit('host_row_change', { rows: newRows });
+    });
+  });
+}
 
 function showReadyScreen() {
   const startScreen = document.getElementById('start-screen');
@@ -81,6 +113,7 @@ function setupSocketListeners() {
     if (subTitle) {
       if (state.miRol === 1) {
         subTitle.innerHTML = `<span style="color:#00f5ff; font-size:20px; font-weight:900;">ERES EL JUGADOR 1 (HOST)</span><br><span style="font-size:12px; color:#666699;">ESPERANDO NUEVO RIVAL EN LA OTRA PC...</span>`;
+        setupRowSelector();
       } else if (state.miRol === 2) {
         subTitle.innerHTML = `<span style="color:#ff3cac; font-size:20px; font-weight:900;">ERES EL JUGADOR 2</span><br><span style="font-size:12px; color:#666699;">CONECTADO CON ÉXITO. ESPERANDO QUE EL HOST INICIE...</span>`;
       } else {
@@ -89,8 +122,13 @@ function setupSocketListeners() {
     }
   });
 
-  socket.on('both_players_ready', () => {
+  socket.on('both_players_ready', (data) => {
     showReadyScreen();
+    if (data && data.activeRows) applyRowUpdate(data.activeRows);
+  });
+
+  socket.on('rows_updated', (data) => {
+    if (data && data.rows) applyRowUpdate(data.rows);
   });
 
   socket.on('start_game_signal', () => {

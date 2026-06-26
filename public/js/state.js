@@ -1,6 +1,13 @@
-import { BASE_SPEED } from './config.js';
+import { BASE_SPEED, QWERTY_ROWS } from './config.js';
+
+export function updateActiveRows(rows) {
+  state.activeRows = rows;
+  state.activeKeys = rows.flatMap(r => QWERTY_ROWS[r - 1]);
+}
 
 export const state = {
+  activeRows: [1, 2, 3],
+  activeKeys: [...QWERTY_ROWS[0], ...QWERTY_ROWS[1], ...QWERTY_ROWS[2]],
   miRol: null,
   gameRunning: false,
   gamePaused: false,

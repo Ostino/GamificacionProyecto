@@ -67,6 +67,7 @@ app.post('/api/ranking/clear', (req, res) => {
 });
 
 let conectados = { p1: null, p2: null };
+let activeRows = [1, 2, 3];
 
 io.on('connection', (socket) => {
   if (conectados.p1 === socket.id || conectados.p2 === socket.id) return;
@@ -88,12 +89,19 @@ io.on('connection', (socket) => {
   socket.emit('init_role', { role: rol });
 
   if (conectados.p1 && conectados.p2) {
-    io.emit('both_players_ready');
+    io.emit('both_players_ready', { activeRows });
   }
 
   socket.on('host_start_game', () => {
     if (socket.id === conectados.p1) {
       io.emit('start_game_signal');
+    }
+  });
+
+  socket.on('host_row_change', (data) => {
+    if (socket.id === conectados.p1 && Array.isArray(data.rows) && data.rows.length > 0) {
+      activeRows = data.rows;
+      io.emit('rows_updated', { rows: activeRows });
     }
   });
 
@@ -104,6 +112,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (conectados.p1 === socket.id) {
       conectados.p1 = null;
+      activeRows = [1, 2, 3];
       console.log(`[SERVER] Libera ranura Jugador 1`);
     } else if (conectados.p2 === socket.id) {
       conectados.p2 = null;
