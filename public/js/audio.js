@@ -7,7 +7,7 @@ let gainNode = null;
 let startContextTime = 0;
 let loaded = false;
 let started = false;
-let pendingVolume = 1.0;
+let pendingVolume = 0.65;
 
 export async function loadAudio() {
   try {
@@ -66,12 +66,8 @@ export function stopAudio() {
   started = false;
 }
 
-// Devuelve el índice del beat actual según el reloj del AudioContext.
-// Retorna -1 si el audio no ha comenzado.
-// Como audioCtx.currentTime se congela al suspender, la pausa funciona sola.
 export function getAudioBeat() {
   if (!started || !audioCtx) return -1;
-  // Si el contexto sigue suspendido (resume falló o aún no completó), usar fallback
   if (audioCtx.state === 'suspended') return -1;
   const elapsed = audioCtx.currentTime - startContextTime - BEAT_OFFSET;
   if (elapsed < 0) return -1;

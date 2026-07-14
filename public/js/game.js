@@ -98,7 +98,6 @@ function gameFrame(timestamp) {
 
   updateTimer();
 
-  // Spawn en cada beat de la canción; si el audio no cargó, fallback por timer
   const beat = getAudioBeat();
   if (beat >= 0) {
     if (beat > state.lastBeatIndex) {
@@ -107,7 +106,6 @@ function gameFrame(timestamp) {
       spawnNote(2);
     }
   } else {
-    // Fallback: resta el tiempo pausado para que no quede por delante del audio
     const elapsed = performance.now() - state.gameStartTime - state.totalPausedMs;
     const fallbackBeat = Math.floor(Math.max(0, elapsed) / 510);
     if (fallbackBeat > state.lastBeatIndex) {
@@ -144,7 +142,6 @@ function gameFrame(timestamp) {
   }
 }
 
-// Aplica un estado de pausa concreto (true/false). No emite nada.
 export function applyPauseState(shouldPause) {
   if (!state.gameRunning) return;
   if (state.gamePaused === shouldPause) return; // ya está en el estado correcto
@@ -162,7 +159,6 @@ export function applyPauseState(shouldPause) {
   }
 }
 
-// Toggle local: calcula el nuevo estado, lo aplica y lo envía al rival.
 export function togglePause() {
   if (!state.gameRunning) return;
   const newPaused = !state.gamePaused;

@@ -35,10 +35,24 @@
     "color": "rgb(255, 60, 172)"
   },
   {
+    "initials": "OMD",
+    "player": 1,
+    "time": "00:57.1",
+    "pts": 93,
+    "color": "rgb(0, 245, 255)"
+  },
+  {
     "initials": "PEP",
     "player": 1,
     "time": "00:47.8",
     "pts": 15,
+    "color": "rgb(255, 26, 26)"
+  },
+  {
+    "initials": "OMS",
+    "player": 1,
+    "time": "00:51.0",
+    "pts": 2,
     "color": "rgb(255, 26, 26)"
   },
   {
